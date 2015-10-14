@@ -51,5 +51,17 @@ public class CalculatorTest {
     public void testAnotherDelimiter(){
     	assertEquals(5, Calculator.add("//?\n2?3"));
     }
-        
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testOneNegative(){
+    	assertEquals("Negatives not allowed: -1",
+    	 Calculator.add("-1,2"));
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testTwoNegatives(){
+    	assertEquals("Negatives not allowed: -4,-5",
+    		Calculator.add("2,-4,3,-5"));
+    }
+
 }
