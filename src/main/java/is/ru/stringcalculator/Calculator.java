@@ -7,8 +7,8 @@ public class Calculator {
 			return 0;
 		}
 		if(containsNewDelimiter(text)){
-			String delimiter = newDelimiter(text);
-			text = sanitizeString(text, delimiter);
+			String[] delimiters = newDelimiter(text);
+			text = sanitizeString(text, delimiters);
 		}
 		if(containsNewLine(text))
 			text = replaceNewLine(text);
@@ -50,31 +50,61 @@ public class Calculator {
     private static boolean containsNewDelimiter(String numbers){
     	return numbers.startsWith("//");
     }
-    private static String newDelimiter(String numbers){
-    	String delimiter = "";
+    private static String[] newDelimiter(String numbers){
+    	String tempDelimiter = "";
+    	String[] delimiters;
+    	int delCount = 0;
+    	int delIndex = 0;
+    	boolean delStart = false;
+    	boolean delEnd = false;
     		if(numbers.startsWith("//[")){
+    			for(int k = 0; k < numbers.length(); k++){
+    				if(numbers.charAt(k) == '[')
+    					delStart = true;
+    				if(numbers.charAt(k) == ']')
+    					delEnd = true;
+    				if (delStart && delEnd) {
+    					delCount++;
+    					delStart = false;
+    					delEnd = false;
+    				}
+    				if(numbers.charAt(k) == '\n')
+    					break;
+			}	
+			delimiters = new String[delCount];
     			for (int i = 3; i < numbers.length(); i++) {
     				if(numbers.charAt(i) != ']'){
-    					delimiter += numbers.charAt(i);
+    					tempDelimiter += numbers.charAt(i);
     				}else{
-    					break;
+    					i++;
+    					delimiters[delIndex] = tempDelimiter;
+    					tempDelimiter = "";
+    					delIndex++;
+    					if(delIndex == delCount)
+    						break;
     				}
     			}
     		}else{
-    			return "" + numbers.charAt(2);
+    			delimiters = new String[1];
+    			delimiters[0] = "" + numbers.charAt(2);
+    			return delimiters;
     		}
-    	return delimiter;
+    	return delimiters;
     }
 
-    private static String sanitizeString(String numbers, String delimiter){
-    	if (delimiter.length() == 1) {
+    private static String sanitizeString(String numbers, String[] delimiters){
+    	if (delimiters.length == 1 && delimiters[0].length() == 1) {
     		numbers = numbers.substring(2);
 			numbers = numbers.replace(numbers.charAt(0), ',');
 			numbers = numbers.substring(2);
 			return numbers;
 		}else{
-			numbers = numbers.replace("//[" + delimiter +"]\n", "");
-			numbers = numbers.replace(delimiter, ",");
+			numbers = numbers.replace("//", "");
+			for (int i = 0; i < delimiters.length ; i++) {
+				numbers = numbers.replace("[" + delimiters[i] +"]", "");
+				numbers = numbers.replace(delimiters[i], ",");
+			}
+			numbers = numbers.substring(1);
 			return numbers;
 		}
     }
