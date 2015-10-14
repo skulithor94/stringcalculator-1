@@ -3,20 +3,18 @@ package is.ru.stringcalculator;
 public class Calculator {
 
 	public static int add(String text){
-		if(newDelimiter(text)){
-			text = standardizeDelimiter(text);
-		}
-		if(contansNewLine(text)){
-			text = replaceNewLine(text);
-		}
 		if(text.equals("")){
 			return 0;
-		}else if(text.contains(",")){
-			int[] array = toInt(splitNumbers(text));
-			checkNegative(array);
-			return sum(array);
-		}else
-			return 1;
+		}
+		if(containsNewDelimiter(text)){
+			String delimiter = newDelimiter(text);
+			text = sanitizeString(text, delimiter);
+		}
+		if(containsNewLine(text))
+			text = replaceNewLine(text);
+		int[] array = toInt(splitNumbers(text));
+		checkNegative(array);
+		return sum(array);
 	}
 
 	private static int[] toInt(String[] numbers){
@@ -46,19 +44,39 @@ public class Calculator {
     	return numbers.replace('\n', ',');
     }
 
-    private static boolean contansNewLine(String numbers){
+    private static boolean containsNewLine(String numbers){
     	return numbers.contains("\n");
     }
-
-    private static boolean newDelimiter(String numbers){
+    private static boolean containsNewDelimiter(String numbers){
     	return numbers.startsWith("//");
     }
+    private static String newDelimiter(String numbers){
+    	String delimiter = "";
+    		if(numbers.startsWith("//[")){
+    			for (int i = 3; i < numbers.length(); i++) {
+    				if(numbers.charAt(i) != ']'){
+    					delimiter += numbers.charAt(i);
+    				}else{
+    					break;
+    				}
+    			}
+    		}else{
+    			return "" + numbers.charAt(2);
+    		}
+    	return delimiter;
+    }
 
-    private static String standardizeDelimiter(String numbers){
+    private static String sanitizeString(String numbers, String delimiter){
+    	if (delimiter.length() == 1) {
     		numbers = numbers.substring(2);
 			numbers = numbers.replace(numbers.charAt(0), ',');
 			numbers = numbers.substring(2);
 			return numbers;
+		}else{
+			numbers = numbers.replace("//[" + delimiter +"]\n", "");
+			numbers = numbers.replace(delimiter, ",");
+			return numbers;
+		}
     }
 
     private static void  checkNegative(int[] array){

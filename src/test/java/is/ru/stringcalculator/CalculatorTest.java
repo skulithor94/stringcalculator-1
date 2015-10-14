@@ -74,4 +74,9 @@ public class CalculatorTest {
     	assertEquals(0, Calculator.add("1001,2000,3000"));
 	}
 
+	@Test
+    public void testLongDelimiter(){
+    	assertEquals(6, Calculator.add("//[***]\n1***2***3"));
+	}	
+
 }
