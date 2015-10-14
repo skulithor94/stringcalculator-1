@@ -64,4 +64,14 @@ public class CalculatorTest {
     		Calculator.add("2,-4,3,-5"));
     }
 
+    @Test
+    public void testOverThousand(){
+    	assertEquals(2, Calculator.add("1001,2"));
+	}
+
+    @Test
+    public void testOverThousandRetZero(){
+    	assertEquals(0, Calculator.add("1001,2000,3000"));
+	}
+
 }

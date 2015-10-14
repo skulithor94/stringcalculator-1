@@ -21,8 +21,11 @@ public class Calculator {
 
 	private static int[] toInt(String[] numbers){
 		int[] array = new int[numbers.length];
+		int temp;
 		for(int i = 0; i < numbers.length; i++){
-			array[i] = Integer.parseInt(numbers[i]);
+			temp = Integer.parseInt(numbers[i]);
+			if(temp <= 1000)
+				array[i] = temp;
 		}
 		return array;
 	}
