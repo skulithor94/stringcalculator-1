@@ -53,24 +53,9 @@ public class Calculator {
     private static String[] newDelimiter(String numbers){
     	String tempDelimiter = "";
     	String[] delimiters;
-    	int delCount = 0;
     	int delIndex = 0;
-    	boolean delStart = false;
-    	boolean delEnd = false;
-    		if(numbers.startsWith("//[")){
-    			for(int k = 0; k < numbers.length(); k++){
-    				if(numbers.charAt(k) == '[')
-    					delStart = true;
-    				if(numbers.charAt(k) == ']')
-    					delEnd = true;
-    				if (delStart && delEnd) {
-    					delCount++;
-    					delStart = false;
-    					delEnd = false;
-    				}
-    				if(numbers.charAt(k) == '\n')
-    					break;
-			}	
+    	int delCount = numberOfDelimiters(numbers);
+    		if(numbers.startsWith("//[")){	
 			delimiters = new String[delCount];
     			for (int i = 3; i < numbers.length(); i++) {
     				if(numbers.charAt(i) != ']'){
@@ -92,6 +77,25 @@ public class Calculator {
     	return delimiters;
     }
 
+    private static int numberOfDelimiters(String numbers){
+    	int delCount = 0;
+    	boolean delStart = false;
+    	boolean delEnd = false;
+    			for(int k = 0; k < numbers.length(); k++){
+    				if(numbers.charAt(k) == '[')
+    					delStart = true;
+    				if(numbers.charAt(k) == ']')
+    					delEnd = true;
+    				if (delStart && delEnd) {
+    					delCount++;
+    					delStart = false;
+    					delEnd = false;
+    				}
+    				if(numbers.charAt(k) == '\n')
+    					break;
+			}
+		return delCount;
+    }
     private static String sanitizeString(String numbers, String[] delimiters){
     	if (delimiters.length == 1 && delimiters[0].length() == 1) {
     		numbers = numbers.substring(2);
@@ -108,7 +112,6 @@ public class Calculator {
 			return numbers;
 		}
     }
-
     private static void  checkNegative(int[] array){
     	boolean negCheck = false;
     	String throwString = "";

@@ -84,4 +84,13 @@ public class CalculatorTest {
 		assertEquals(6, Calculator.add("//[*][%]\n1*2%3"));
 	}
 
+	@Test
+	public void testTwoLongDelimiters(){
+		assertEquals(6, Calculator.add("//[**][%%%]\n1**2%%%3"));
+	}
+
+	@Test
+	public void testThreeLongDelimiters(){
+		assertEquals(10, Calculator.add("//[**][%%%][xzxz]\n1**2%%%3xzxz4"));
+	}
 }
