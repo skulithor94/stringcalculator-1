@@ -93,4 +93,9 @@ public class CalculatorTest {
 	public void testThreeLongDelimiters(){
 		assertEquals(10, Calculator.add("//[**][%%%][xzxz]\n1**2%%%3xzxz4"));
 	}
+
+    @Test
+    public void testPrefixDelimiter(){
+        assertEquals(10, Calculator.add("//[ss][ssfx][xzxz]\n1ss2ssfx3xzxz4"));
+    }
 }
